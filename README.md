@@ -1,25 +1,52 @@
-# Student Manager - NestJS REST API + PostgreSQL + Prisma ORM
+# Student Manager - Vite React + NestJS REST API + PostgreSQL + Prisma ORM
 
-Aplikasi web sederhana manajemen data mahasiswa yang menghubungkan REST API NestJS ke basis data PostgreSQL menggunakan Prisma ORM sehingga seluruh data tersimpan permanen.
+Aplikasi web fullstack manajemen data mahasiswa yang terdiri dari folder `frontend` (Vite + React) dan folder `backend` (NestJS + Prisma ORM + PostgreSQL) sehingga seluruh data tersimpan secara permanen di basis data.
 
 ## Fitur Utama
 
 - Operasi CRUD lengkap (Create, Read, Update, Delete) untuk entitas `Student` melalui Prisma Client.
 - Query lanjutan berupa filter berdasarkan jurusan (`where`) dan pencarian NIM/nama pada `GET /api/students`.
 - Endpoint statistik (`GET /api/students/stats`) menggunakan `count`, `aggregate`, dan `groupBy` untuk menampilkan total mahasiswa, rata-rata IPK, serta jumlah mahasiswa per jurusan.
-- Antarmuka web responsif untuk tampilan desktop dan mobile yang terhubung langsung ke REST API.
+- Antarmuka web Vite + React responsif untuk tampilan desktop dan mobile yang terhubung ke REST API NestJS.
 
 ## Teknologi
 
-- NestJS (TypeScript, Express)
-- Prisma ORM v6 (`prisma`, `@prisma/client`)
-- PostgreSQL 16 (Docker Compose)
-- HTML, CSS, dan JavaScript native untuk antarmuka web
+- Frontend: Vite, React 19, CSS responsif
+- Backend: NestJS (TypeScript, Express), Prisma ORM v6 (`prisma`, `@prisma/client`)
+- Database: PostgreSQL 16 (Docker Compose)
 
 ## Struktur Proyek
 
 ```text
 bab10-prisma-api/
+├── backend/
+│   ├── prisma/
+│   │   ├── migrations/
+│   │   ├── schema.prisma
+│   │   └── seed.mjs
+│   ├── src/
+│   │   ├── prisma/
+│   │   │   ├── prisma.module.ts
+│   │   │   └── prisma.service.ts
+│   │   ├── students/
+│   │   │   ├── students.controller.ts
+│   │   │   ├── students.module.ts
+│   │   │   └── students.service.ts
+│   │   ├── app.module.ts
+│   │   └── main.ts
+│   ├── test/
+│   │   └── crud.test.mjs
+│   ├── .env.example
+│   ├── package.json
+│   └── tsconfig.json
+├── frontend/
+│   ├── src/
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
 ├── docs/
 │   └── screenshots/
 │       ├── 01-desktop-dashboard.png
@@ -27,71 +54,50 @@ bab10-prisma-api/
 │       ├── 03-crud-create-desktop.png
 │       ├── 04-filter-and-stats.png
 │       └── 05-api-stats-json.png
-├── prisma/
-│   ├── migrations/
-│   ├── schema.prisma
-│   └── seed.mjs
-├── public/
-│   └── index.html
-├── src/
-│   ├── prisma/
-│   │   ├── prisma.module.ts
-│   │   └── prisma.service.ts
-│   ├── students/
-│   │   ├── students.controller.ts
-│   │   ├── students.module.ts
-│   │   └── students.service.ts
-│   ├── app.module.ts
-│   └── main.ts
-├── test/
-│   └── crud.test.mjs
 ├── docker-compose.yml
-├── .env.example
-├── package.json
-└── tsconfig.json
+└── README.md
 ```
 
 ## Cara Menjalankan
 
-1. Salin file konfigurasi environment:
-
-```bash
-cp .env.example .env
-```
-
-2. Jalankan server PostgreSQL menggunakan Docker Compose:
+### 1. Jalankan PostgreSQL
 
 ```bash
 docker compose up -d
 ```
 
-3. Pasang dependensi proyek:
+### 2. Jalankan Backend (NestJS + Prisma)
 
 ```bash
+cd backend
+cp .env.example .env
 npm install
-```
-
-4. Jalankan migrasi awal Prisma dan isi data awal (seed):
-
-```bash
 npx prisma migrate dev --name init
 node prisma/seed.mjs
-```
-
-5. Build dan jalankan server NestJS:
-
-```bash
 npm run build
 npm start
 ```
 
-6. Buka aplikasi di browser pada `http://localhost:3001`.
+Server backend berjalan di `http://localhost:3001`.
 
-7. Jalankan pengujian CRUD, filter, dan statistik:
+Untuk menjalankan pengujian CRUD, filter, dan statistik:
 
 ```bash
+cd backend
 npm test
 ```
+
+### 3. Jalankan Frontend (Vite + React)
+
+Buka terminal baru:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Aplikasi frontend berjalan di `http://localhost:5173` dan otomatis meneruskan request `/api` ke backend `http://localhost:3001`.
 
 ## Daftar Endpoint API
 
